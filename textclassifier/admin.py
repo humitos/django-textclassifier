@@ -5,13 +5,23 @@ from django.contrib import admin
 from .classifier import NaiveBayesClassifier
 from .constants import SPAM, VALID
 from .fields import TextClassificationField
+from .validators import TextClassificationValidator
 from .models import TrainingData
 
 
 def classify_queryset(modeladmin, request, queryset, classification=SPAM):
     for obj in queryset:
         for field in obj._meta.fields:
-            if isinstance(field, TextClassificationField):
+            if (
+                    # Field is a TextClassificationField
+                    isinstance(field, TextClassificationField) or
+                    # Field contains a TextClassificationValidator
+                    any([
+                        isinstance(validator, TextClassificationValidator)
+                        for validator in field.validators
+                    ])
+            ):
+
                 classifier = NaiveBayesClassifier(
                     app_label=obj._meta.app_label,
                     model=obj._meta.model_name,
