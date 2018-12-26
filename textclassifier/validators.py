@@ -51,6 +51,7 @@ class TextClassificationValidator(object):
         self.classifier.load()
         result = self.classifier.classify(value)
         if result.is_spam():
+            log.warning('Text Classification is SPAM: [value=%s]', value)
             if issubclass(self.exception_class, ValidationError):
                 raise self.exception_class(self.message, self.code)
             else:
