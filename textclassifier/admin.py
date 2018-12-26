@@ -28,7 +28,7 @@ classify_as_spam.short_description = 'Classify object as spam'
 
 
 def classify_as_spam_and_delete(modeladmin, request, queryset):
-    classify_as_spam(modeladmin, request, queryset, classification=SPAM)
+    classify_as_spam(modeladmin, request, queryset)
     queryset.delete()
 
 
