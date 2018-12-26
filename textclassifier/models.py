@@ -1,9 +1,11 @@
 """Classifier database storage"""
 
 from django.db import models
+from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext as _
 
 
+@python_2_unicode_compatible
 class TrainingData(models.Model):
     """Model for per-field training data"""
 
@@ -20,6 +22,6 @@ class TrainingData(models.Model):
     create_date = models.DateTimeField(_('Creation date'), auto_now_add=True)
     update_date = models.DateTimeField(_('Last modification date'), auto_now=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return ('Training data for field {0}.{1}.{2}'
                 .format(self.app_label, self.model, self.field_name))
