@@ -79,9 +79,14 @@ class NaiveBayesClassifier(object):
             zip(classifier.classes_.tolist(), class_values),
             accuracy_threshold=accuracy_threshold,
         )
-
-        if prob.is_spam(accuracy_threshold):
-            log.debug('Classification failed: %s', prob)
+        log.debug(
+            'Text Classification: [app_label=%s] [model=%s] [field_name=%s] [value=%s] %s',
+            self.app_label,
+            self.model,
+            self.field_name,
+            value,
+            prob,
+        )
         return prob
 
 
