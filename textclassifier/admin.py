@@ -12,6 +12,7 @@ from .models import TrainingData
 def classify_queryset(modeladmin, request, queryset, classification=SPAM):
     for obj in queryset:
         for field in obj._meta.fields:
+            value = getattr(obj, field.name)
             if (
                     # Field is a TextClassificationField
                     isinstance(field, TextClassificationField) or
@@ -20,14 +21,14 @@ def classify_queryset(modeladmin, request, queryset, classification=SPAM):
                         isinstance(validator, TextClassificationValidator)
                         for validator in field.validators
                     ])
-            ):
+            ) and value:
 
                 classifier = NaiveBayesClassifier(
                     app_label=obj._meta.app_label,
                     model=obj._meta.model_name,
-                    field_name=field.name
+                    field_name=field.name,
                 )
-                classifier.update(getattr(obj, field.name), classification)
+                classifier.update(value, classification)
 
 
 def classify_as_spam(modeladmin, request, queryset):
